@@ -9,8 +9,29 @@ Feature planning & roadmaps will be maintained in this repo's Issues.
 
 # Requirements
 
-* Firmware: [CircuitPython v8.x for ESP32-S3 TFT PSRAM](https://circuitpython.org/board/adafruit_feather_esp32s3_tft/)
+* Firmware: [CircuitPython v8.x for ESP32-S3 TFT PSRAM](https://circuitpython.org/board/adafruit_feather_esp32s3_tft/) (currently in alpha)
 * Python Libraries:
     * [Adafruit CircuitPython library bundle for v8.x](https://circuitpython.org/libraries) (currently in alpha)
     * [Adafruit_CircuitPython_AzureIoT library](https://docs.circuitpython.org/projects/azureiot/en/latest/)
 
+# Configuration
+
+Configure the device's behavior by modifying the variables under the `# Configuration` comment immediately following the `import` statements.
+
+|Variable|Description|
+|--------|-----------|
+|delay|The amount of time to wait between sensor readings, in seconds|
+|temp_warning_c|The minimum temperature, in Celcius, at which a warning status will be triggered. Values less than this number will be considered OK. When the temperature is in a warning status, both the Celcius and Fahrenheit will be displayed in yellow.|
+|temp_critical_c|The minimum temperature, in Celcius, which should be considered critical. When the temperature is in a critical status, both the Celcius and Fahrenheit will be displayed in red.|
+|humid_warning|The minimum relative humidity at which a warning status will be triggered. Values less than this number will be considered OK. When the humidity is in a warning status, the relative humidity will be displayed in yellow.|
+|humid_critical|The minimum relative humidity which should be considered critical. When the humidity is in a critical status, the relative humidity will be displayed in red.|
+
+# Status LED
+
+The onboard NeoPixel is used as an indicator of overall status.
+
+|Color|Indication|
+|-----|----------|
+|Red|One or both sensor values are in a Critical status.|
+|Yellow|One or both sensor values are in a Warning status|
+|Green|All sensor values are OK|
