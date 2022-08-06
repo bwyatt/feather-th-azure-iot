@@ -3,6 +3,7 @@ import board
 import adafruit_ahtx0
 import terminalio
 import neopixel
+import wifi
 from displayio import Group
 from adafruit_display_text import bitmap_label
 
@@ -19,7 +20,7 @@ sensor = adafruit_ahtx0.AHTx0(i2c)
 pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
 pixel.brightness = 0.3
 temp_status = "OK" # Can be "OK", "WARN", or "CRIT"
-humid_status = "OK" 
+humid_status = "OK"
 
 # Display Setup
 main_group = Group()
@@ -56,6 +57,27 @@ humid_label = bitmap_label.Label(
 humid_label.anchor_point = (0, 0)
 humid_label.anchored_position = (10, 90)
 main_group.append(humid_label)
+
+# Wifi Setup
+# pylint: disable=no-name-in-module,wrong-import-order
+try:
+    from secrets import secrets
+except ImportError:
+    print("WiFi secrets are kept in secrets.py, please add them there!")
+    raise
+
+if "ssid" in secrets:
+    try:
+        print("Connecting to %s" % secrets["ssid"])
+        wifi.radio.connect(secrets["ssid"], secrets["password"])
+        print("Connected to %s!" % secrets["ssid"])
+        #TODO: Display Wifi connected icon
+    except:
+        print("Wifi connection failed!")
+        raise
+else:
+    print("SSID was not provided. Wifi will not be connected.")
+    #TODO: Display Wifi off icon
 
 board.DISPLAY.show(main_group)
 
