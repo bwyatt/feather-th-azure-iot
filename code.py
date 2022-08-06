@@ -95,7 +95,7 @@ while (True):
         pixel.fill((0, 255, 0))
 
     temp_c_label.text = "Temp (C): {}".format(temp_c)
-    temp_f_label.text = "Temp(F): {}".format(temp_f)
-    humid_label.text = "RH: {}".format(humidity)
+    temp_f_label.text = "Temp (F): {}".format(temp_f)
+    humid_label.text = "RH: {}%".format(humidity)
 
     time.sleep(delay)
