@@ -68,9 +68,9 @@ except ImportError:
 
 if "ssid" in secrets:
     try:
-        print("Connecting to {}}".format(secrets["ssid"]))
+        print("Connecting to {}".format(secrets["ssid"]))
         wifi.radio.connect(secrets["ssid"], secrets["password"])
-        print("Connected to {}}!".format(secrets["ssid"]))
+        print("Connected to {}!".format(secrets["ssid"]))
         #TODO: Display Wifi connected icon
     except:
         print("Wifi connection failed!")
@@ -82,9 +82,9 @@ else:
 board.DISPLAY.show(main_group)
 
 while (True):
-    temp_c = sensor.temperature
-    temp_f = (temp_c * 1.8) + 32
-    humidity = sensor.relative_humidity
+    temp_c = round(sensor.temperature, 2)
+    temp_f = round((temp_c * 1.8) + 32, 2)
+    humidity = round(sensor.relative_humidity, 2)
     
     if temp_c > temp_critical_c:
         temp_status = "CRIT"
