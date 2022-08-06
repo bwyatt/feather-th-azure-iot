@@ -6,13 +6,14 @@ import neopixel
 from displayio import Group
 from adafruit_display_text import bitmap_label
 
-# CONFIGURATION
+# Configuration
 delay = 1
 temp_warning_c = 35
 temp_critical_c = 50
 humid_warning = 45
 humid_critical = 55
 
+# Board Setup
 i2c = board.I2C()
 sensor = adafruit_ahtx0.AHTx0(i2c)
 pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
@@ -20,6 +21,7 @@ pixel.brightness = 0.3
 temp_status = "OK" # Can be "OK", "WARN", or "CRIT"
 humid_status = "OK" 
 
+# Display Setup
 text_area = bitmap_label.Label(terminalio.FONT, scale=2)
 text_area.anchor_point = (0.5, 0.5)
 text_area.anchored_position = (board.DISPLAY.width // 2, board.DISPLAY.height // 2)
