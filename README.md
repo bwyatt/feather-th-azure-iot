@@ -16,15 +16,19 @@ Feature planning & roadmaps will be maintained in this repo's Issues.
 
 # Configuration
 
-Configure the device's behavior by modifying the variables under the `# Configuration` comment immediately following the `import` statements.
+Configuration is loaded at runtime from a JSON file named `config.json`. Because network information is sensitive, that file isn't stored in this repo. Instead, I've provided `example_config.json`, which you can copy to create your own config file. 
 
-|Variable|Description|
+> **Important:** If you don't create a config.json file, the code will not run successfully.
+
+|Key|Description|
 |--------|-----------|
 |delay|The amount of time to wait between sensor readings, in seconds|
 |temp_warning_c|The minimum temperature, in Celcius, at which a warning status will be triggered. Values less than this number will be considered OK. When the temperature is in a warning status, both the Celcius and Fahrenheit will be displayed in yellow.|
 |temp_critical_c|The minimum temperature, in Celcius, which should be considered critical. When the temperature is in a critical status, both the Celcius and Fahrenheit will be displayed in red.|
 |humid_warning|The minimum relative humidity at which a warning status will be triggered. Values less than this number will be considered OK. When the humidity is in a warning status, the relative humidity will be displayed in yellow.|
 |humid_critical|The minimum relative humidity which should be considered critical. When the humidity is in a critical status, the relative humidity will be displayed in red.|
+|network_ssid|The name of the WiFi network to connect to (optional)|
+|network_key|The password or key for the WiFi network (required if `network_ssid` is set)|
 
 # Status LED
 

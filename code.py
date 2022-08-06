@@ -3,15 +3,13 @@ import board
 import adafruit_ahtx0
 import terminalio
 import neopixel
+import json
 from displayio import Group
 from adafruit_display_text import bitmap_label
 
-# Configuration
-delay = 1
-temp_warning_c = 35
-temp_critical_c = 50
-humid_warning = 45
-humid_critical = 55
+# Load Configuration
+config_file = open("config.json", "r")
+config = json.loads(config_file.read())
 
 # Board Setup
 i2c = board.I2C()
@@ -64,11 +62,11 @@ while (True):
     temp_f = (temp_c * 1.8) + 32
     humidity = sensor.relative_humidity
     
-    if temp_c > temp_critical_c:
+    if temp_c > config["temp_critical_c"]:
         temp_status = "CRIT"
         temp_c_label.color = crit_color
         temp_f_label.color = crit_color
-    elif temp_c > temp_warning_c:
+    elif temp_c > config["temp_warning_c"]:
         temp_status = "WARN"
         temp_c_label.color = warn_color
         temp_f_label.color = warn_color
@@ -77,10 +75,10 @@ while (True):
         temp_c_label.color = ok_color
         temp_f_label.color = ok_color
 
-    if humidity > humid_critical:
+    if humidity > config["humid_critical"]:
         humid_status = "CRIT"
         humid_label.color = crit_color
-    elif humidity > humid_warning:
+    elif humidity > config["humid_warning"]:
         humid_status = "WARN"
         humid_label.color = warn_color
     else:
@@ -98,4 +96,4 @@ while (True):
     temp_f_label.text = "Temp (F): {}".format(temp_f)
     humid_label.text = "RH: {}%".format(humidity)
 
-    time.sleep(delay)
+    time.sleep(config["delay"])
