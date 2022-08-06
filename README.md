@@ -21,10 +21,10 @@ Configure the device's behavior by modifying the variables under the `# Configur
 |Variable|Description|
 |--------|-----------|
 |delay|The amount of time to wait between sensor readings, in seconds|
-|temp_warning_c|The minimum temperature, in Celcius, at which a warning status will be triggered. Values less than this number will be considered OK.|
-|temp_critical_c|The minimum temperature, in Celcius, which should be considered critical|
-|humid_warning|The minimum relative humidity at which a warning status will be triggered. Values less than this number will be considered OK.|
-|humid_critical|The minimum relative humidity which should be considered critical|
+|temp_warning_c|The minimum temperature, in Celcius, at which a warning status will be triggered. Values less than this number will be considered OK. When the temperature is in a warning status, both the Celcius and Fahrenheit will be displayed in yellow.|
+|temp_critical_c|The minimum temperature, in Celcius, which should be considered critical. When the temperature is in a critical status, both the Celcius and Fahrenheit will be displayed in red.|
+|humid_warning|The minimum relative humidity at which a warning status will be triggered. Values less than this number will be considered OK. When the humidity is in a warning status, the relative humidity will be displayed in yellow.|
+|humid_critical|The minimum relative humidity which should be considered critical. When the humidity is in a critical status, the relative humidity will be displayed in red.|
 
 # Status LED
 
