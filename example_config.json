@@ -1,0 +1,9 @@
+{
+    "delay": 1,
+    "temp_warning_c": 35,
+    "temp_critical_c": 50,
+    "humid_warning": 45,
+    "humid_critical": 55,
+    "network_ssid":"",
+    "network_key":""
+}
