@@ -68,9 +68,9 @@ except ImportError:
 
 if "ssid" in secrets:
     try:
-        print("Connecting to %s" % secrets["ssid"])
+        print("Connecting to {}}".format(secrets["ssid"]))
         wifi.radio.connect(secrets["ssid"], secrets["password"])
-        print("Connected to %s!" % secrets["ssid"])
+        print("Connected to {}}!".format(secrets["ssid"]))
         #TODO: Display Wifi connected icon
     except:
         print("Wifi connection failed!")
