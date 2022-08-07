@@ -14,7 +14,7 @@ Feature planning & roadmaps will be maintained in this repo's Issues.
     * [Adafruit CircuitPython library bundle for v8.x](https://circuitpython.org/libraries) (currently in alpha)
     * [Adafruit_CircuitPython_AzureIoT library](https://docs.circuitpython.org/projects/azureiot/en/latest/)
 
-# Configuration
+# Software Configuration
 
 Configure the device's behavior by modifying the variables under the `# Configuration` comment immediately following the `import` statements.
 
@@ -25,6 +25,21 @@ Configure the device's behavior by modifying the variables under the `# Configur
 |temp_critical_c|The minimum temperature, in Celcius, which should be considered critical. When the temperature is in a critical status, both the Celcius and Fahrenheit will be displayed in red.|
 |humid_warning|The minimum relative humidity at which a warning status will be triggered. Values less than this number will be considered OK. When the humidity is in a warning status, the relative humidity will be displayed in yellow.|
 |humid_critical|The minimum relative humidity which should be considered critical. When the humidity is in a critical status, the relative humidity will be displayed in red.|
+
+# Secret Configuration
+
+Wifi connection code uses CircuitPython's `secrets.py` convention, as shown in [this project](https://learn.adafruit.com/mqtt-in-circuitpython/circuitpython-wifi-usage). To avoid accidentally saving credentials in GitHub, I've added the file to `.gitignore`.
+
+Create your own `secrets.py` file in the root of the file system. It needs to contain a dictionary with the SSID and password for the network as well as credentials for Azure. Copy the code below into your new file and populate it with the correct values for your environment.
+
+> **Note:** If you want to use the device in offline-only mode, create the `secrets.py` file with an empty dictionary.
+
+```python
+secrets = {
+    'ssid' : 'your-ssid-here',
+    'password' : 'your-password-here'
+}
+```
 
 # Status LED
 
