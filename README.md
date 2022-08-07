@@ -36,9 +36,16 @@ Create your own `secrets.py` file in the root of the file system. It needs to co
 
 ```python
 secrets = {
-    'ssid' : 'your-ssid-here',
-    'password' : 'your-password-here'
+    # Wifi settings
+    "ssid" : "",
+    "password" : "",
+    
+    # Azure IoT Central settings
+    "id_scope": "",
+    "device_id": "",
+    "device_sas_key": ""
 }
+
 ```
 
 # Status LED

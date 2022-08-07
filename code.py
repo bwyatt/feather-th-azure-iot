@@ -1,11 +1,17 @@
 import time
+import socketpool
 import board
 import adafruit_ahtx0
 import terminalio
 import neopixel
 import wifi
+import rtc
 from displayio import Group
+import adafruit_ntp
+from adafruit_esp32spi import adafruit_esp32spi_socket
 from adafruit_display_text import bitmap_label
+from adafruit_azureiot import IoTCentralDevice
+
 
 # Configuration
 delay = 1
@@ -21,6 +27,7 @@ pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
 pixel.brightness = 0.3
 temp_status = "OK" # Can be "OK", "WARN", or "CRIT"
 humid_status = "OK"
+online_mode = False
 
 # Display Setup
 main_group = Group()
@@ -70,7 +77,8 @@ if "ssid" in secrets:
     try:
         print("Connecting to {}".format(secrets["ssid"]))
         wifi.radio.connect(secrets["ssid"], secrets["password"])
-        print("Connected to {}!".format(secrets["ssid"]))
+        print("Connected to {}! IP: {}".format(secrets["ssid"], wifi.radio.ipv4_address))
+        online_mode = True
         #TODO: Display Wifi connected icon
     except:
         print("Wifi connection failed!")
@@ -78,6 +86,20 @@ if "ssid" in secrets:
 else:
     print("SSID was not provided. Wifi will not be connected.")
     #TODO: Display Wifi off icon
+
+if online_mode:
+    try:
+        print("Connecting to Azure")
+        pool = socketpool.SocketPool(wifi.radio)
+        ntp = adafruit_ntp.NTP(pool, tz_offset=0)
+        rtc.RTC().datetime = ntp.datetime
+        print("Current time is {}".format(ntp.datetime))
+        socket = pool.socket()
+        device = IoTCentralDevice(socket, wifi, secrets["id_scope"], secrets["device_id"], secrets["device_sas_key"])
+        device.connect()
+    except:
+        print("Azure connection failed!")
+        raise
 
 board.DISPLAY.show(main_group)
 
@@ -119,5 +141,15 @@ while (True):
     temp_c_label.text = "Temp (C): {}".format(temp_c)
     temp_f_label.text = "Temp (F): {}".format(temp_f)
     humid_label.text = "RH: {}%".format(humidity)
+
+    if online_mode:
+        try:
+            device.loop()
+            telemetry_message = {"temp_c": temp_c, "temp_f": temp_f, "humidity": humidity}
+            print("Sending telemetry: {}".format(telemetry_message))
+            device.send_telemetry(telemetry_message)
+        except:
+            # TODO: Something
+            raise
 
     time.sleep(delay)
