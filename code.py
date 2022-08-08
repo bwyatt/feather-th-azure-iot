@@ -25,6 +25,8 @@ humid_status = "OK"
 btn = DigitalInOut(board.BUTTON)
 btn.direction = Direction.INPUT
 btn.pull = Pull.UP
+button_ready = True
+show_network = False
 
 # Wifi Setup
 # pylint: disable=no-name-in-module,wrong-import-order
@@ -45,7 +47,7 @@ if "ssid" in secrets:
 else:
     print("SSID was not provided. Wifi will not be connected.")
 
-# Display Setup
+# Sensor Display Setup
 main_group = Group()
 ok_color = 0x00FF00
 warn_color = 0xFFFF00
@@ -82,6 +84,18 @@ humid_label.anchored_position = (10, 90)
 main_group.append(humid_label)
 
 board.DISPLAY.show(main_group)
+
+# Network Display Setup
+network_group = Group()
+
+ip_label = bitmap_label.Label(
+    font=terminalio.FONT,
+    text="IP: {}".format(wifi.radio.ipv4_address),
+    scale=2,
+)
+ip_label.anchor_point = (0, 0)
+ip_label.anchored_position = (10, 10)
+network_group.append(ip_label)
 
 while (True):
     temp_c = round(sensor.temperature, 2)
@@ -123,4 +137,13 @@ while (True):
     humid_label.text = "RH: {}%".format(humidity)
 
     if not btn.value:
-        print("Button is pressed")
+        if btn.value != button_ready:
+            show_network = not show_network # Toggle display of status
+            button_ready = False
+    else:
+        button_ready = True
+
+    if show_network:
+        board.DISPLAY.show(network_group)
+    else:
+        board.DISPLAY.show(main_group)
