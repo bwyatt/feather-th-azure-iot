@@ -6,6 +6,7 @@ import neopixel
 import wifi
 from displayio import Group
 from adafruit_display_text import bitmap_label
+from digitalio import DigitalInOut, Direction, Pull
 
 # Configuration
 delay = 1
@@ -21,8 +22,32 @@ pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
 pixel.brightness = 0.3
 temp_status = "OK" # Can be "OK", "WARN", or "CRIT"
 humid_status = "OK"
+btn = DigitalInOut(board.BUTTON)
+btn.direction = Direction.INPUT
+btn.pull = Pull.UP
+button_ready = True
+show_network = False
 
-# Display Setup
+# Wifi Setup
+# pylint: disable=no-name-in-module,wrong-import-order
+try:
+    from secrets import secrets
+except ImportError:
+    print("WiFi secrets are kept in secrets.py, please add them there!")
+    raise
+
+if "ssid" in secrets:
+    try:
+        print("Connecting to {}".format(secrets["ssid"]))
+        wifi.radio.connect(secrets["ssid"], secrets["password"])
+        print("Connected to {}!".format(secrets["ssid"]))
+    except:
+        print("Wifi connection failed!")
+        raise
+else:
+    print("SSID was not provided. Wifi will not be connected.")
+
+# Sensor Display Setup
 main_group = Group()
 ok_color = 0x00FF00
 warn_color = 0xFFFF00
@@ -58,28 +83,19 @@ humid_label.anchor_point = (0, 0)
 humid_label.anchored_position = (10, 90)
 main_group.append(humid_label)
 
-# Wifi Setup
-# pylint: disable=no-name-in-module,wrong-import-order
-try:
-    from secrets import secrets
-except ImportError:
-    print("WiFi secrets are kept in secrets.py, please add them there!")
-    raise
-
-if "ssid" in secrets:
-    try:
-        print("Connecting to {}".format(secrets["ssid"]))
-        wifi.radio.connect(secrets["ssid"], secrets["password"])
-        print("Connected to {}!".format(secrets["ssid"]))
-        #TODO: Display Wifi connected icon
-    except:
-        print("Wifi connection failed!")
-        raise
-else:
-    print("SSID was not provided. Wifi will not be connected.")
-    #TODO: Display Wifi off icon
-
 board.DISPLAY.show(main_group)
+
+# Network Display Setup
+network_group = Group()
+
+ip_label = bitmap_label.Label(
+    font=terminalio.FONT,
+    text="IP: {}".format(wifi.radio.ipv4_address),
+    scale=2,
+)
+ip_label.anchor_point = (0, 0)
+ip_label.anchored_position = (10, 10)
+network_group.append(ip_label)
 
 while (True):
     temp_c = round(sensor.temperature, 2)
@@ -120,4 +136,14 @@ while (True):
     temp_f_label.text = "Temp (F): {}".format(temp_f)
     humid_label.text = "RH: {}%".format(humidity)
 
-    time.sleep(delay)
+    if not btn.value:
+        if btn.value != button_ready:
+            show_network = not show_network # Toggle display of status
+            button_ready = False
+    else:
+        button_ready = True
+
+    if show_network:
+        board.DISPLAY.show(network_group)
+    else:
+        board.DISPLAY.show(main_group)
