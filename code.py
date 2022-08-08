@@ -6,6 +6,7 @@ import neopixel
 import wifi
 from displayio import Group
 from adafruit_display_text import bitmap_label
+from digitalio import DigitalInOut, Direction, Pull
 
 # Configuration
 delay = 1
@@ -21,6 +22,9 @@ pixel = neopixel.NeoPixel(board.NEOPIXEL, 1)
 pixel.brightness = 0.3
 temp_status = "OK" # Can be "OK", "WARN", or "CRIT"
 humid_status = "OK"
+btn = DigitalInOut(board.BUTTON)
+btn.direction = Direction.INPUT
+btn.pull = Pull.UP
 
 # Display Setup
 main_group = Group()
@@ -120,4 +124,5 @@ while (True):
     temp_f_label.text = "Temp (F): {}".format(temp_f)
     humid_label.text = "RH: {}%".format(humidity)
 
-    time.sleep(delay)
+    if not btn.value:
+        print("Button is pressed")
