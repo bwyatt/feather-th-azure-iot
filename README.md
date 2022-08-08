@@ -30,9 +30,9 @@ Configure the device's behavior by modifying the variables under the `# Configur
 
 Wifi connection code uses CircuitPython's `secrets.py` convention, as shown in [this project](https://learn.adafruit.com/mqtt-in-circuitpython/circuitpython-wifi-usage). To avoid accidentally saving credentials in GitHub, I've added the file to `.gitignore`.
 
-Create your own `secrets.py` file in the root of the file system. It needs to contain a dictionary with the SSID and password for the network as well as credentials for Azure. Copy the code below into your new file and populate it with the correct values for your environment.
+Create your own `secrets.py` file in the root of the file system. It needs to contain a dictionary with the SSID. Copy the code below into your new file and populate it with the correct values for your environment.
 
-> **Note:** If you want to use the device in offline-only mode, create the `secrets.py` file with an empty dictionary.
+> **Note:** If you want to use the device in offline-only mode, create the `secrets.py` file with an empty dictionary or comment out the line that sets `ssid`.
 
 ```python
 secrets = {
