@@ -26,6 +26,25 @@ btn = DigitalInOut(board.BUTTON)
 btn.direction = Direction.INPUT
 btn.pull = Pull.UP
 
+# Wifi Setup
+# pylint: disable=no-name-in-module,wrong-import-order
+try:
+    from secrets import secrets
+except ImportError:
+    print("WiFi secrets are kept in secrets.py, please add them there!")
+    raise
+
+if "ssid" in secrets:
+    try:
+        print("Connecting to {}".format(secrets["ssid"]))
+        wifi.radio.connect(secrets["ssid"], secrets["password"])
+        print("Connected to {}!".format(secrets["ssid"]))
+    except:
+        print("Wifi connection failed!")
+        raise
+else:
+    print("SSID was not provided. Wifi will not be connected.")
+
 # Display Setup
 main_group = Group()
 ok_color = 0x00FF00
@@ -61,27 +80,6 @@ humid_label = bitmap_label.Label(
 humid_label.anchor_point = (0, 0)
 humid_label.anchored_position = (10, 90)
 main_group.append(humid_label)
-
-# Wifi Setup
-# pylint: disable=no-name-in-module,wrong-import-order
-try:
-    from secrets import secrets
-except ImportError:
-    print("WiFi secrets are kept in secrets.py, please add them there!")
-    raise
-
-if "ssid" in secrets:
-    try:
-        print("Connecting to {}".format(secrets["ssid"]))
-        wifi.radio.connect(secrets["ssid"], secrets["password"])
-        print("Connected to {}!".format(secrets["ssid"]))
-        #TODO: Display Wifi connected icon
-    except:
-        print("Wifi connection failed!")
-        raise
-else:
-    print("SSID was not provided. Wifi will not be connected.")
-    #TODO: Display Wifi off icon
 
 board.DISPLAY.show(main_group)
 
